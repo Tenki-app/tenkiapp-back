@@ -34,10 +34,10 @@ const taskSchema = new Schema({
 		required: true,
 	},
 	pomodoro: {
-		type: pomodoroSchema,
-		required: true,
+		type: Schema.Types.ObjectId,
+		ref: 'pomodoros',
 	},
 });
 
 module.exports = model('tasks', taskSchema);
-export { taskSchema };
+export {};

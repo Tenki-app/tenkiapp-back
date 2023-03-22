@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose');
-import { taskSchema } from './task.model';
+
 const userSchema = new Schema({
 	name: {
 		type: String,
@@ -15,8 +15,8 @@ const userSchema = new Schema({
 	},
 	tasks: [
 		{
-			type: taskSchema,
-			required: true,
+			type: Schema.Types.ObjectId,
+			ref: 'tasks',
 		},
 	],
 });

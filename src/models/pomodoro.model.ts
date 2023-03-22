@@ -13,5 +13,6 @@ const pomodoroSchema = new Schema({
 		required: true,
 	},
 });
+
 module.exports = model('pomodoros', pomodoroSchema);
 export {};
