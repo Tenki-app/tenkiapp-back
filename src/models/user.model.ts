@@ -21,5 +21,5 @@ const userSchema = new Schema({
 	],
 });
 
-module.exports = model('tasks', userSchema);
+module.exports = model('users', userSchema);
 export {};

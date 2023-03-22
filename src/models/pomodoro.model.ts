@@ -13,6 +13,5 @@ const pomodoroSchema = new Schema({
 		required: true,
 	},
 });
-
-module.exports = model('tasks', pomodoroSchema);
-export { pomodoroSchema };
+module.exports = model('pomodoros', pomodoroSchema);
+export {};

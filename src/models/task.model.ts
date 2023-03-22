@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose');
-import { pomodoroSchema } from './pomodoro.model';
+const pomodoroSchema = require('./pomodoro.model');
 const taskSchema = new Schema({
 	title: {
 		type: String,
