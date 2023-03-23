@@ -14,7 +14,5 @@ const pomodoroSchema = new Schema({
 	},
 });
 
-module.exports = model('pomodoros', pomodoroSchema);
 const modelPomodoros = model('users', pomodoroSchema);
-
 export { modelPomodoros };
