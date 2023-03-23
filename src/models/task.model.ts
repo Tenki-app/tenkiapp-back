@@ -1,5 +1,4 @@
 const { Schema, model } = require('mongoose');
-const pomodoroSchema = require('./pomodoro.model');
 const taskSchema = new Schema({
 	title: {
 		type: String,
@@ -39,5 +38,5 @@ const taskSchema = new Schema({
 	},
 });
 
-module.exports = model('tasks', taskSchema);
-export {};
+const modelTasks = model('users', taskSchema);
+export { modelTasks };

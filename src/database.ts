@@ -1,5 +1,7 @@
+require('dotenv').config();
+
 const mongoose = require('mongoose');
-const url = 'mongodb+srv://tenkiappteam:nlQ70nOu2PbEGiDI@clustertenki.vqr6xjf.mongodb.net/tenkiDB?retryWrites=true&w=majority';
+const url = process.env.MONGODB_CNN;
 
 const connectDatabase = () => {
 	mongoose
