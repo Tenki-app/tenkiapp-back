@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose');
-const pomodoroSchema = require('./pomodoro.model');
+const { pomodoroSchema } = require('./pomodoro.model');
+
 const taskSchema = new Schema({
 	title: {
 		type: String,
@@ -33,11 +34,7 @@ const taskSchema = new Schema({
 		type: Boolean,
 		required: true,
 	},
-	pomodoro: {
-		type: Schema.Types.ObjectId,
-		ref: 'pomodoros',
-	},
+	pomodoro: [pomodoroSchema],
 });
 
-module.exports = model('tasks', taskSchema);
-export {};
+export { taskSchema };

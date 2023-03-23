@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+
 const pomodoroSchema = new Schema({
 	work_time: {
 		type: Number,
@@ -14,5 +15,4 @@ const pomodoroSchema = new Schema({
 	},
 });
 
-module.exports = model('pomodoros', pomodoroSchema);
-export {};
+export { pomodoroSchema };

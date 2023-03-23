@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const taskSchema = require('./task.model');
 
 const userSchema = new Schema({
 	name: {
@@ -13,13 +14,9 @@ const userSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	tasks: [
-		{
-			type: Schema.Types.ObjectId,
-			ref: 'tasks',
-		},
-	],
+	tasks: [taskSchema],
 });
 
 module.exports = model('users', userSchema);
+
 export {};
