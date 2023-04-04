@@ -7,7 +7,9 @@ const connectDatabase = () => {
 	mongoose
 		.connect(url)
 		.then(() => console.log('Connected successfully to the cluster'))
-		.catch((err: Error) => console.error(err));
+		.catch((err: Error) => {
+			console.error(Error);
+		});
 };
 
 export { connectDatabase };
