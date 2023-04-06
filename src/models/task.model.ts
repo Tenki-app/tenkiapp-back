@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { Schema } = require('mongoose');
 const { pomodoroSchema } = require('./pomodoro.model');
 
 const taskSchema = new Schema({

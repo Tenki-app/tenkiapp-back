@@ -41,7 +41,7 @@ export const putUser = async (request: Request, response: Response) => {
 	}
 };
 
-export const postUsers = async (request: Request, response: Response) => {
+export const postUser = async (request: Request, response: Response) => {
 	let resp = {};
 	try {
 		const { name, user_name, password, email } = request.body;
