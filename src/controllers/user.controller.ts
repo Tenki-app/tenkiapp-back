@@ -33,9 +33,9 @@ export const putUser = async (request: Request, response: Response) => {
 };
 
 export const postUsers = async (request: Request, response: Response) => {
-	console.log('post: ', request.body);
-	const { name, user_name, password, email } = request.body;
 	try {
+		console.log('post: ', request.body);
+		const { name, user_name, password, email } = request.body;
 		const newUser = new User({
 			name,
 			user_name,
@@ -49,9 +49,7 @@ export const postUsers = async (request: Request, response: Response) => {
 		};
 		response.status(201).json(resp);
 	} catch (err: any) {
-		if (err.name === 'ValidationError') {
-			response.status(400).json({ status: 400, name: err.name, message: 'Bad request' });
-		}
+		response.status(400).json({ status: 400, name: err.name, message: 'Bad request' });
 	}
 };
 
