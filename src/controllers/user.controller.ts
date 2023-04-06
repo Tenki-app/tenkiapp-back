@@ -10,7 +10,7 @@ export const getUsers = async (request: Request, response: Response) => {
 	}
 };
 
-export const postUsers = async (request: any, response: any) => {
+export const postUsers = async (request: Request, response: Response) => {
 	const { name, user_name, password, email } = request.body;
 	try {
 		const newUser = new User({
