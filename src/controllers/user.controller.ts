@@ -10,7 +10,30 @@ export const getUsers = async (request: Request, response: Response) => {
 	}
 };
 
+export const getUser = async (request: Request, response: Response) => {
+	const { id } = request.params;
+	const user = await User.findById(id);
+	try {
+		response.status(200).json(user);
+	} catch (err: any) {
+		response.status(404).json({ status: 404, name: err.name, message: 'Resource not found' });
+	}
+};
+
+export const putUser = async (request: Request, response: Response) => {
+	const { id } = request.params;
+	//const { name, user_name, password, email };
+	const user = await User.findByIdAndUpdate(id, request.body, { new: true });
+	console.log('monda: ', request.body);
+	try {
+		response.status(200).json(user);
+	} catch (err: any) {
+		response.status(404).json({ status: 404, name: err.name, message: 'Resource not found' });
+	}
+};
+
 export const postUsers = async (request: Request, response: Response) => {
+	console.log('post: ', request.body);
 	const { name, user_name, password, email } = request.body;
 	try {
 		const newUser = new User({
@@ -30,4 +53,10 @@ export const postUsers = async (request: Request, response: Response) => {
 			response.status(400).json({ status: 400, name: err.name, message: 'Bad request' });
 		}
 	}
+};
+
+export const deleteUser = async (request: Request, response: Response) => {
+	const { id } = request.params;
+	const usuario = await User.findByIdAndDelete(id);
+	response.json(usuario);
 };
