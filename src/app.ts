@@ -7,7 +7,6 @@ const cors = require('cors');
 const app = express();
 
 connectDatabase();
-
 app.use(cors());
 app.use(express.json());
 routerApi(app);
