@@ -1,8 +1,23 @@
 import { Request, Response } from 'express';
-const Task = require('../models/task.model');
 const User = require('../models/user.model');
 
-export const postTasks = async (request: Request, response: Response): Promise<void> => {
+export const getTasks = async (request: Request, response: Response): Promise<void> => {
+	let resp = {};
+
+	try {
+		const { id } = request.params;
+
+		const user = await User.findById(id);
+
+		resp = { status: 200, message: 'Tasks data', tasks: user.tasks };
+		response.status(200).json(resp);
+	} catch (err: any) {
+		resp = { status: 404, name: err.name, message: 'Resource not found' };
+		response.status(404).json(resp);
+	}
+};
+
+export const postTask = async (request: Request, response: Response): Promise<void> => {
 	let resp = {};
 
 	try {
@@ -22,7 +37,7 @@ export const postTasks = async (request: Request, response: Response): Promise<v
 		});
 
 		await user.save();
-		resp = { status: 200, message: 'This is the update user', user };
+		resp = { status: 200, message: 'Task update', user };
 		response.status(200).json(resp);
 	} catch (err: any) {
 		resp = { status: 404, name: err.name, message: 'Resource not found' };
