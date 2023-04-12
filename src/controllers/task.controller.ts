@@ -63,18 +63,17 @@ export const postTask = async (request: Request, response: Response): Promise<vo
 	}
 };
 
-/* 
-{
-	"title": "Sacar al perro",
-	"description": "Sacar al perro ome",
-	"state": "in progress",
-	"category": "next",
-	"date_task": "2023/04/12",
-	"date_created": "2023/04/11",
-	"time": "09:00",
-	"is_pomodoro": false,
-}
-
-​http://localhost:3001/api/tasks/642f43f148a58e925bd721b3
-​http://localhost:3001/api/users
-*/
+export const deleteTask = async (request: Request, response: Response): Promise<void> => {
+	let resp = {};
+	try {
+		const { userId, taskId } = request.params;
+		const user = await User.findById(userId);
+		const task = user.tasks.pop(taskId);
+		await user.save();
+		resp = { status: 200, message: 'the user was deleted succesfully', task };
+		response.status(200).json(resp);
+	} catch (err: any) {
+		resp = { status: 404, name: err.name, message: 'Task or user not found' };
+		response.status(404).json(resp);
+	}
+};
