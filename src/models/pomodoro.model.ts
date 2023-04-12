@@ -15,4 +15,6 @@ const pomodoroSchema = new Schema({
 	},
 });
 
-export { pomodoroSchema };
+module.exports = pomodoroSchema;
+
+export {};

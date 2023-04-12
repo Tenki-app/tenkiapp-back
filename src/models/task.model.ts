@@ -1,5 +1,5 @@
 const { Schema } = require('mongoose');
-const { pomodoroSchema } = require('./pomodoro.model');
+const pomodoroSchema = require('./pomodoro.model');
 
 const taskSchema = new Schema({
 	title: {
@@ -32,9 +32,11 @@ const taskSchema = new Schema({
 	},
 	is_pomodoro: {
 		type: Boolean,
-		required: true,
+		default: false,
 	},
 	pomodoro: [pomodoroSchema],
 });
 
-export { taskSchema };
+module.exports = taskSchema;
+
+export {};

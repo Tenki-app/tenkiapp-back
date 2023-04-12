@@ -32,7 +32,6 @@ export const putUser = async (request: Request, response: Response) => {
 		console.log('body: ', request.body);
 		const { id } = request.params;
 		const user = await User.findByIdAndUpdate(id, request.body, { new: true });
-		console.log(user, 'user post');
 		resp = { status: 200, message: 'This is the update user', user };
 		response.status(200).json(resp);
 	} catch (err: any) {
