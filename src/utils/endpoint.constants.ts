@@ -1,3 +1,7 @@
 export const USERS_ENDPOINTS = {
-	GET_ALL_USERS: '/api/users',
+	USER_BASE_ROUTE: '/api/users',
+};
+
+export const TASKS_ENDPOINTS = {
+	TASK_BASE_ROUTE: '/api/tasks',
 };
