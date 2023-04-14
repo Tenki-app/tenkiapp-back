@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { Schema } = require('mongoose');
 
 const pomodoroSchema = new Schema({
 	work_time: {
@@ -17,4 +17,4 @@ const pomodoroSchema = new Schema({
 
 module.exports = pomodoroSchema;
 
-export {};
+export { };
