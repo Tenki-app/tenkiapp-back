@@ -20,15 +20,15 @@ const taskSchema = new Schema({
 	},
 	date_task: {
 		type: String,
-		required: true,
+		required: false,
 	},
 	date_created: {
 		type: String,
-		required: true,
+		required: false,
 	},
 	time: {
 		type: String,
-		required: true,
+		required: false,
 	},
 	is_pomodoro: {
 		type: Boolean,

@@ -1,5 +1,5 @@
 import { ITask } from '../interfaces/task.interface';
-import { Request, Response } from 'express';
+import { Request, Response, request } from 'express';
 const User = require('../models/user.model');
 
 export const getTask = async (request: Request, response: Response): Promise<void> => {
@@ -9,7 +9,7 @@ export const getTask = async (request: Request, response: Response): Promise<voi
 		const { userId, taskId } = request.params;
 
 		const user = await User.findById(userId);
-		const task = user.tasks.find((taskItem: ITask) => taskItem.id === taskId);
+		const task = user.tasks.id(taskId);
 
 		resp = { status: 200, message: 'Task data', task };
 		response.status(200).json(resp);
@@ -63,6 +63,24 @@ export const postTask = async (request: Request, response: Response): Promise<vo
 	}
 };
 
+export const putTask = async (request: Request, response: Response) => {
+	let resp = {};
+	try {
+		const { userId, taskId } = request.params;
+
+		const user = await User.findById(userId);
+		Object.assign(user.tasks.id(taskId), request.body);
+
+		await user.save();
+		resp = { status: 200, message: 'Task updated', task: user.tasks.id(taskId) };
+		response.status(200).json(resp);
+	} catch (err: any) {
+		resp = { status: 404, name: err.name, message: 'Resource not found' };
+		console.log(err);
+		response.status(404).json(resp);
+	}
+};
+
 export const deleteTask = async (request: Request, response: Response): Promise<void> => {
 	let resp = {};
 	try {
@@ -77,3 +95,19 @@ export const deleteTask = async (request: Request, response: Response): Promise<
 		response.status(404).json(resp);
 	}
 };
+
+/*
+
+	{
+		"title": "hacer el curso de css",
+		"description": "hacer el curso de css",
+		"state": "asd",
+		"category": "asd",
+		"date_task": "hacer el curso de css",
+		"date_created": "hacer el curso de css",
+		"time": "hacer el curso de css",
+	}
+
+
+	http://localhost:3001/api/tasks/642f43f148a58e925bd721b3/6436150462a4b3c1335fd4e2
+*/
