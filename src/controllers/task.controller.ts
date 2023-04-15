@@ -1,5 +1,4 @@
-import { ITask } from '../interfaces/task.interface';
-import { Request, Response, request } from 'express';
+import { Request, Response } from 'express';
 const User = require('../models/user.model');
 
 export const getTask = async (request: Request, response: Response): Promise<void> => {
