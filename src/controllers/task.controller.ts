@@ -94,19 +94,3 @@ export const deleteTask = async (request: Request, response: Response): Promise<
 		response.status(404).json(resp);
 	}
 };
-
-/*
-
-	{
-		"title": "hacer el curso de css",
-		"description": "hacer el curso de css",
-		"state": "asd",
-		"category": "asd",
-		"date_task": "hacer el curso de css",
-		"date_created": "hacer el curso de css",
-		"time": "hacer el curso de css",
-	}
-
-
-	http://localhost:3001/api/tasks/642f43f148a58e925bd721b3/6436150462a4b3c1335fd4e2
-*/
