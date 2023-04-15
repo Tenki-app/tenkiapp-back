@@ -29,7 +29,6 @@ export const getUser = async (request: Request, response: Response): Promise<voi
 export const putUser = async (request: Request, response: Response) => {
 	let resp = {};
 	try {
-		console.log('body: ', request.body);
 		const { id } = request.params;
 		const user = await User.findByIdAndUpdate(id, request.body, { new: true });
 		resp = { status: 200, message: 'This is the update user', user };

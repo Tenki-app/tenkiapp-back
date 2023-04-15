@@ -1,4 +1,3 @@
-import { ITask } from '../interfaces/task.interface';
 import { Request, Response } from 'express';
 const User = require('../models/user.model');
 
@@ -9,7 +8,7 @@ export const getTask = async (request: Request, response: Response): Promise<voi
 		const { userId, taskId } = request.params;
 
 		const user = await User.findById(userId);
-		const task = user.tasks.find((taskItem: ITask) => taskItem.id === taskId);
+		const task = user.tasks.id(taskId);
 
 		resp = { status: 200, message: 'Task data', task };
 		response.status(200).json(resp);
@@ -59,6 +58,24 @@ export const postTask = async (request: Request, response: Response): Promise<vo
 		response.status(200).json(resp);
 	} catch (err: any) {
 		resp = { status: 404, name: err.name, message: 'Resource not found' };
+		response.status(404).json(resp);
+	}
+};
+
+export const putTask = async (request: Request, response: Response) => {
+	let resp = {};
+	try {
+		const { userId, taskId } = request.params;
+
+		const user = await User.findById(userId);
+		Object.assign(user.tasks.id(taskId), request.body);
+
+		await user.save();
+		resp = { status: 200, message: 'Task updated', task: user.tasks.id(taskId) };
+		response.status(200).json(resp);
+	} catch (err: any) {
+		resp = { status: 404, name: err.name, message: 'Resource not found' };
+		console.log(err);
 		response.status(404).json(resp);
 	}
 };
