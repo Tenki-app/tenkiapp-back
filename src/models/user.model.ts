@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 const taskSchema = require('./task.model');
 let mongoose = require('mongoose');
-import { ITask } from '../interfaces/task.interface';
+import { IUserCreate } from '../interfaces/user.interface';
 
 const userSchema = new mongoose.Schema(
 	{
@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema(
 	},
 	{
 		toJSON: {
-			transform: (doc: any, res: any) => {
+			transform: (doc: IUserCreate, res: IUserCreate) => {
 				delete res.password;
 			},
 		},

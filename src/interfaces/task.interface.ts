@@ -9,3 +9,9 @@ export interface ITask {
 	time: string;
 	is_pomodoro: string;
 }
+
+export interface ITaskUpdate {
+	title: '';
+	state: 'done' | 'pending' | 'progress';
+	category: 'today' | 'tomorrow' | 'someday';
+}
