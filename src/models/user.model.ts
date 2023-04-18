@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { model } = require('mongoose');
 const taskSchema = require('./task.model');
 let mongoose = require('mongoose');
 import { IUserCreate } from '../interfaces/user.interface';
