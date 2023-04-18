@@ -1,4 +1,6 @@
 import { Request, Response } from 'express';
+
+const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
 
 export const getUsers = async (request: Request, response: Response): Promise<void> => {
@@ -43,10 +45,11 @@ export const postUser = async (request: Request, response: Response) => {
 	let resp = {};
 	try {
 		const { name, user_name, password, email } = request.body;
+		const passwordHash = await bcrypt.hash(password, 10);
 		const newUser = new User({
 			name,
 			user_name,
-			password,
+			password: passwordHash,
 			email,
 		});
 		await newUser.save();
