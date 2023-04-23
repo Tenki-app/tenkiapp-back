@@ -8,6 +8,7 @@ const app = express();
 
 connectDatabase();
 app.use(cors());
+require('./utils/auth');
 app.use(express.json());
 routerApi(app);
 
