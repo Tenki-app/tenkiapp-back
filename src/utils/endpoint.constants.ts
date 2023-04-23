@@ -7,5 +7,5 @@ export const TASKS_ENDPOINTS = {
 };
 
 export const AUTH_ENDPOINTS = {
-	LOGIN_ROUTE: '/login',
+	LOGIN_ROUTE: '/auth',
 };
