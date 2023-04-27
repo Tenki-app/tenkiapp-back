@@ -8,7 +8,7 @@ const LocalStrategy = new Strategy(async (username: string, password: string, do
 		const user = await getUserName(username);
 		if (!user || !user.password) {
 			resp = { code: 401, name: 'No autorizado', message: 'Contraseña no valida' };
-			return done('Usuario no existe', false);
+			return done(resp, false);
 		}
 		const passwordMatch = await bcrypt.compare(password, user.password);
 		if (!passwordMatch) {
