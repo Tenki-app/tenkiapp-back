@@ -6,6 +6,8 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 
+('monda');
+
 connectDatabase();
 app.use(cors());
 require('./utils/auth');
