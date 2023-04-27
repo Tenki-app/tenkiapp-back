@@ -6,10 +6,8 @@ export const getTask = async (request: Request, response: Response): Promise<voi
 
 	try {
 		const { userId, taskId } = request.params;
-
 		const user = await User.findById(userId);
 		const task = user.tasks.id(taskId);
-
 		resp = { status: 200, message: 'Task data', task };
 		response.status(200).json(resp);
 	} catch (err: any) {
@@ -23,9 +21,7 @@ export const getTasks = async (request: Request, response: Response): Promise<vo
 
 	try {
 		const { userId } = request.params;
-
 		const user = await User.findById(userId);
-
 		resp = { status: 200, message: 'Tasks data', tasks: user.tasks };
 		response.status(200).json(resp);
 	} catch (err: any) {
@@ -40,7 +36,6 @@ export const postTask = async (request: Request, response: Response): Promise<vo
 	try {
 		const { userId } = request.params;
 		const { title, description, state, category, date_task, date_created, time, is_pomodoro } = request.body;
-
 		const user = await User.findById(userId);
 		user.tasks.push({
 			title,

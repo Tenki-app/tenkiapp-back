@@ -10,3 +10,4 @@ function routerApi(app: any) {
 }
 
 module.exports = routerApi;
+export {};
