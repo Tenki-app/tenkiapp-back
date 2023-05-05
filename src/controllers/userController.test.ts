@@ -11,7 +11,7 @@ describe('API test', () => {
 		const endpoint = USERS_ENDPOINTS.USER_BASE_ROUTE;
 		await supertest(app).get(endpoint).expect(200);
 	});
-	/* it('should response 201 code to post', async () => {
+	it('should response 201 code to post', async () => {
 		const endpoint = USERS_ENDPOINTS.USER_BASE_ROUTE;
 		await supertest(app)
 			.post(endpoint)
@@ -22,7 +22,7 @@ describe('API test', () => {
 				email: 'Test',
 			})
 			.expect(201);
-	}); */
+	});
 	it('should response 404 code to post', async () => {
 		const endpoint = USERS_ENDPOINTS.USER_BASE_ROUTE;
 		await supertest(app).post(endpoint).expect(400);
