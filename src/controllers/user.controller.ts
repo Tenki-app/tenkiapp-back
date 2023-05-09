@@ -70,8 +70,8 @@ export const deleteUser = async (request: Request, response: Response): Promise<
 	try {
 		const { id } = request.params;
 		const usuario = await User.findByIdAndDelete(id);
-		resp = { status: 200, message: 'the user was deleted successfully', userData: usuario };
-		response.status(200).json(resp);
+		resp = { status: 204, message: 'the user was deleted successfully', userData: usuario };
+		response.status(204).json(resp);
 	} catch (err: any) {
 		resp = { status: 404, name: err.name, message: 'User not found' };
 		response.status(404).json(resp);
