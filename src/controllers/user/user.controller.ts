@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 const bcrypt = require('bcrypt');
-const User = require('../models/user.model');
+const User = require('../../models/user.model');
 
 export const getUsers = async (request: Request, response: Response): Promise<void> => {
 	let resp = {};

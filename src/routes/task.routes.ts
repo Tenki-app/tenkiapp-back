@@ -1,4 +1,4 @@
-const { getTask, getTasks, postTask, deleteTask, putTask } = require('../controllers/task.controller');
+const { getTask, getTasks, postTask, deleteTask, putTask } = require('../controllers/task/task.controller');
 const taskRouter = require('express').Router();
 
 taskRouter.route('/:userId').get(getTasks).post(postTask);

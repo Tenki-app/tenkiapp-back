@@ -1,8 +1,10 @@
 const app = require('./../index');
 const supertest = require('supertest');
-const { USERS_ENDPOINTS } = require('../utils/endpoint.constants');
+const { USERS_ENDPOINTS, TASKS_ENDPOINTS } = require('../utils/endpoint.constants');
+describe('Tasks API test', () => {});
 
 describe('API test', () => {
+	/* USERS */
 	it('Should test that true', () => {
 		expect(true).toBe(true);
 	});
@@ -74,4 +76,32 @@ describe('API test', () => {
 		const endpointDelete = endpoint + `${registerToDelete._id}`;
 		await supertest(app).delete(endpointDelete).expect(204);
 	}); */
+
+	/* TASKS */
+	it('should response 200 code to get tasks', async () => {
+		const endpoint = TASKS_ENDPOINTS.TASK_BASE_ROUTE + '/64546b17fb9c285f208b2063';
+		await supertest(app).get(endpoint).expect(200);
+	});
+	it('should response 404 code to get tasks', async () => {
+		const endpoint = TASKS_ENDPOINTS.TASK_BASE_ROUTE;
+		await supertest(app).get(endpoint).expect(404);
+	});
+	it('should response 404 code to post a task', async () => {
+		const endpoint = TASKS_ENDPOINTS.TASK_BASE_ROUTE + '/64546b17fb9c285f208b2063';
+
+		await supertest(app)
+			.post(endpoint)
+			.send({
+				title: 'Test',
+				description: 'Test',
+				state: 'Test',
+				category: 'Test',
+				date_task: 'Test',
+				date_created: 'Test',
+				time: 'Test',
+				is_pomodoro: 'Test',
+			})
+			.expect(404);
+	});
 });
+export {};
