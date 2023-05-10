@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-const User = require('../../models/user.model');
+const User = require('../models/user.model');
 
 export const getTask = async (request: Request, response: Response): Promise<void> => {
 	let resp = {};

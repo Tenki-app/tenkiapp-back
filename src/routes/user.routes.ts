@@ -1,4 +1,4 @@
-const { getUsers, getUser, postUser, putUser, deleteUser } = require('../controllers/user/user.controller');
+const { getUsers, getUser, postUser, putUser, deleteUser } = require('../controllers/user.controller');
 const userRouter = require('express').Router();
 
 userRouter.route('/').get(getUsers).post(postUser);
