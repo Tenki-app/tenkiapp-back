@@ -4,4 +4,5 @@ export interface IUserCreate {
 	user_name: string;
 	password?: string;
 	email: string;
+	accessToken: string;
 }
