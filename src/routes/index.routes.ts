@@ -5,7 +5,7 @@ const authRoutes = require('./auth.routes');
 const passport = require('passport');
 
 function routerApi(app: any) {
-	app.use(AUTH_ENDPOINTS.LOGIN_ROUTE, authRoutes);
+	app.use(AUTH_ENDPOINTS.AUTH_BASE_ROUTE, authRoutes);
 
 	// jwt validation for routes below
 	app.use(passport.authenticate('jwt', { session: false }));

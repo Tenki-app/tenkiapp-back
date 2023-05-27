@@ -1,10 +1,10 @@
 require('dotenv').config();
 import { Request, Response } from 'express';
-import { IUserCreate } from '../interfaces/user.interface';
 
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
 const refreshTokenKey = process.env.REFRESH_TOKEN_SECRET;
+const accessTokenKey = process.env.ACCESS_TOKEN_SECRET;
 
 export const handleRefreshToken = async (request: Request, response: Response): Promise<Response> => {
 	let resp;
@@ -23,11 +23,14 @@ export const handleRefreshToken = async (request: Request, response: Response): 
 			return response.status(403).json(resp);
 		}
 
-		jwt.verify(refreshToken, refreshTokenKey, (err, decoded) => {
+		jwt.verify(refreshToken, refreshTokenKey, (err: any, decoded: any) => {
 			if (err || foundUser.user_name !== decoded.user_name) {
 				resp = { status: 403, message: 'Monda' };
 				return response.status(403).json(resp);
 			}
+			const accessToken = jwt.sign({ username: decoded.user_name, role: decoded.role }, accessTokenKey, { expiresIn: '60s' });
+			resp = { status: 201, accessToken: accessToken };
+			response.json(resp);
 		});
 
 		return response;
