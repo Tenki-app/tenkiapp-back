@@ -21,12 +21,17 @@ const userSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
+		refreshToken: {
+			type: String,
+			required: true,
+		},
 		tasks: [taskSchema],
 	},
 	{
 		toJSON: {
 			transform: (doc: IUserCreate, res: IUserCreate) => {
 				delete res.password;
+				delete res.refreshToken;
 			},
 		},
 	}

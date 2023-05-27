@@ -21,10 +21,12 @@ export const authLogin = async (request: any, response: Response): Promise<void>
 			username: user.user_name,
 			role: 'user',
 		};
-		const accessToken = jwt.sign(payload, accessTokenKey, { expiresIn: '30s' });
+		const accessToken = jwt.sign(payload, accessTokenKey, { expiresIn: '60s' });
 		const refreshToken = jwt.sign(payload, refreshTokenKey, { expiresIn: '1d' });
 
 		response.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+		user.refreshToken = refreshToken;
+		user.save();
 		response.json({
 			user,
 			accessToken,
@@ -35,21 +37,4 @@ export const authLogin = async (request: any, response: Response): Promise<void>
 	}
 };
 
-export const authSignup = async (request: any, response: Response): Promise<Response> => {
-	let resp;
-	try {
-		const { user_name, password, email, name } = request.body;
-
-		const oldUser = await User.findOne({ user_name });
-
-		if (oldUser) {
-			resp = { status: 404, message: 'User already exist' };
-			return response.status(409).json(resp);
-		}
-
-		return response;
-	} catch (err: any) {
-		resp = { status: 404, name: err.name, message: 'Resource not found' };
-		return response.status(404).json(resp);
-	}
-};
+export const authSignup = async (request: any, response: Response): Promise<void> => {};

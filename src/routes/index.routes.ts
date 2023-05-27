@@ -2,11 +2,16 @@ const { USERS_ENDPOINTS, TASKS_ENDPOINTS, AUTH_ENDPOINTS } = require('../utils/e
 const userRoutes = require('./user.routes');
 const taskRoutes = require('./task.routes');
 const authRoutes = require('./auth.routes');
+const passport = require('passport');
 
 function routerApi(app: any) {
+	app.use(AUTH_ENDPOINTS.LOGIN_ROUTE, authRoutes);
+
+	// jwt validation for routes below
+	app.use(passport.authenticate('jwt', { session: false }));
+
 	app.use(USERS_ENDPOINTS.USER_BASE_ROUTE, userRoutes);
 	app.use(TASKS_ENDPOINTS.TASK_BASE_ROUTE, taskRoutes);
-	app.use(AUTH_ENDPOINTS.LOGIN_ROUTE, authRoutes);
 }
 
 module.exports = routerApi;

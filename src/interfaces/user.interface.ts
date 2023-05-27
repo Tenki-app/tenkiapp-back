@@ -5,4 +5,5 @@ export interface IUserCreate {
 	password?: string;
 	email: string;
 	accessToken: string;
+	refreshToken?: string;
 }
