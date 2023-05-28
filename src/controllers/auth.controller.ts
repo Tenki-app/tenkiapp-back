@@ -37,4 +37,44 @@ export const authLogin = async (request: any, response: Response): Promise<void>
 	}
 };
 
-export const authSignup = async (request: any, response: Response): Promise<void> => {};
+export const authSignup = async (request: Request, response: Response): Promise<Response> => {
+	let resp;
+	try {
+		const { user_name, password, email, name } = request.body;
+
+		const existUser = await User.findOne({ user_name: user_name });
+
+		if (existUser) {
+			resp = { status: 409, message: 'User already exist' };
+			return response.status(409).json(resp);
+		}
+
+		const tokenPayload = {
+			username: user_name,
+			role: 'user',
+		};
+
+		const passwordHash = await bcrypt.hash(password, 10);
+		const accessToken = jwt.sign(tokenPayload, accessTokenKey, { expiresIn: '60s' });
+		const refreshToken = jwt.sign(tokenPayload, refreshTokenKey, { expiresIn: '1d' });
+
+		response.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+
+		const newUser = new User({
+			user_name: user_name,
+			password: passwordHash,
+			email: email,
+			name: name,
+			refreshToken: refreshToken,
+		});
+		await newUser.save();
+
+		return response.status(200).json({
+			accessToken: accessToken,
+			user: newUser,
+		});
+	} catch (err: any) {
+		resp = { status: 404, name: err.name, message: 'Resource not found' };
+		return response.status(404).json(resp);
+	}
+};
