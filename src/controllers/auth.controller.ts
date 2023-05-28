@@ -78,3 +78,34 @@ export const authSignup = async (request: Request, response: Response): Promise<
 		return response.status(404).json(resp);
 	}
 };
+
+export const handleLogout = async (request: Request, response: Response): Promise<Response> => {
+	let resp;
+	try {
+		const cookies = request.cookies;
+		if (!cookies?.jwt) {
+			resp = { status: 204, message: 'There is not any resource coincidences' };
+			return response.status(204).json(resp);
+		}
+
+		const refreshToken = cookies.jwt;
+		const foundUser = await User.findOne({ refreshToken: refreshToken });
+		if (!foundUser) {
+			response.clearCookie('jwt', { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+			resp = { status: 403, message: 'Forbidden access' };
+			return response.status(403).json(resp);
+		}
+
+		foundUser.refreshToken = '';
+
+		// add in production: secure = true / this only allow https serves
+		response.clearCookie('jwt', { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+		await foundUser.save();
+
+		resp = { status: 204, message: 'Logout successfully' };
+		return response.status(204).json(resp);
+	} catch (err: any) {
+		resp = { status: 404, name: err.name, message: 'Resource not found' };
+		return response.status(404).json(resp);
+	}
+};
