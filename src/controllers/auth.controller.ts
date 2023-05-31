@@ -5,7 +5,8 @@ import { IUserCreate } from '../interfaces/user.interface';
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
-const jwtKey = process.env.JWT_KEY;
+const accessTokenKey = process.env.ACCESS_TOKEN_SECRET;
+const refreshTokenKey = process.env.REFRESH_TOKEN_SECRET;
 
 export const getUserName = async (user_name: string): Promise<IUserCreate> => {
 	const user = await User.findOne({ user_name: user_name });
@@ -17,16 +18,94 @@ export const authLogin = async (request: any, response: Response): Promise<void>
 	try {
 		const user = request.user;
 		const payload = {
-			sub: user.id,
+			username: user.user_name,
 			role: 'user',
 		};
-		const token = jwt.sign(payload, jwtKey);
+		const accessToken = jwt.sign(payload, accessTokenKey, { expiresIn: '60s' });
+		const refreshToken = jwt.sign(payload, refreshTokenKey, { expiresIn: '1d' });
+
+		response.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+		user.refreshToken = refreshToken;
+		user.save();
 		response.json({
 			user,
-			token,
+			accessToken,
 		});
 	} catch (err: any) {
 		resp = { status: 404, name: err.name, message: 'Resource not found' };
 		response.status(404).json(resp);
+	}
+};
+
+export const authSignup = async (request: Request, response: Response): Promise<Response> => {
+	let resp;
+	try {
+		const { user_name, password, email, name } = request.body;
+
+		const existUser = await User.findOne({ user_name: user_name });
+
+		if (existUser) {
+			resp = { status: 409, message: 'User already exist' };
+			return response.status(409).json(resp);
+		}
+
+		const tokenPayload = {
+			username: user_name,
+			role: 'user',
+		};
+
+		const passwordHash = await bcrypt.hash(password, 10);
+		const accessToken = jwt.sign(tokenPayload, accessTokenKey, { expiresIn: '60s' });
+		const refreshToken = jwt.sign(tokenPayload, refreshTokenKey, { expiresIn: '1d' });
+
+		response.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+
+		const newUser = new User({
+			user_name: user_name,
+			password: passwordHash,
+			email: email,
+			name: name,
+			refreshToken: refreshToken,
+		});
+		await newUser.save();
+
+		return response.status(200).json({
+			accessToken: accessToken,
+			user: newUser,
+		});
+	} catch (err: any) {
+		resp = { status: 404, name: err.name, message: 'Resource not found' };
+		return response.status(404).json(resp);
+	}
+};
+
+export const handleLogout = async (request: Request, response: Response): Promise<Response> => {
+	let resp;
+	try {
+		const cookies = request.cookies;
+		if (!cookies?.jwt) {
+			resp = { status: 204, message: 'There is not any resource coincidences' };
+			return response.status(204).json(resp);
+		}
+
+		const refreshToken = cookies.jwt;
+		const foundUser = await User.findOne({ refreshToken: refreshToken });
+		if (!foundUser) {
+			response.clearCookie('jwt', { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+			resp = { status: 403, message: 'Forbidden access' };
+			return response.status(403).json(resp);
+		}
+
+		foundUser.refreshToken = '';
+
+		// add in production: secure = true / this only allow https serves
+		response.clearCookie('jwt', { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+		await foundUser.save();
+
+		resp = { status: 204, message: 'Logout successfully' };
+		return response.status(204).json(resp);
+	} catch (err: any) {
+		resp = { status: 404, name: err.name, message: 'Resource not found' };
+		return response.status(404).json(resp);
 	}
 };

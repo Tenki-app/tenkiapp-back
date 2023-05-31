@@ -7,12 +7,13 @@ const LocalStrategy = new Strategy(async (username: string, password: string, do
 	try {
 		const user = await getUserName(username);
 		if (!user || !user.password) {
-			resp = { code: 401, name: 'No autorizado', message: 'Contraseña no valida' };
+			resp = { code: 401, name: 'No autorizado', message: 'Incorrect password or username' };
 			return done(resp, false);
 		}
 		const passwordMatch = await bcrypt.compare(password, user.password);
 		if (!passwordMatch) {
-			done('Contraseña no coincide', false);
+			resp = { code: 401, name: 'No autorizado', message: 'Password does not match' };
+			done(resp, false);
 		}
 		done(null, user);
 	} catch (err: any) {
