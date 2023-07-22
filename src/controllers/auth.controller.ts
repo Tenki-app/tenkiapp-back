@@ -21,14 +21,18 @@ export const authLogin = async (request: any, response: Response): Promise<void>
 			username: user.user_name,
 			role: 'user',
 		};
-		const accessToken = jwt.sign(payload, accessTokenKey, { expiresIn: '60s' });
+		const accessToken = jwt.sign(payload, accessTokenKey, { expiresIn: '15m' });
 		const refreshToken = jwt.sign(payload, refreshTokenKey, { expiresIn: '1d' });
 
 		response.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
 		user.refreshToken = refreshToken;
 		user.save();
+
+		const userToSend = JSON.parse(JSON.stringify(user));
+		delete userToSend.tasks;
+
 		response.json({
-			user,
+			user: userToSend,
 			accessToken,
 		});
 	} catch (err: any) {

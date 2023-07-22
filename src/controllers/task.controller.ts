@@ -35,21 +35,23 @@ export const postTask = async (request: Request, response: Response): Promise<vo
 
 	try {
 		const { userId } = request.params;
-		const { title, description, state, category, date_task, date_created, time, is_pomodoro } = request.body;
+		const { title, description, state, category, time, is_pomodoro, date_task, pomodoro } =
+			request.body;
 		const user = await User.findById(userId);
 		user.tasks.push({
-			title,
-			description,
-			state,
-			category,
-			date_task,
-			date_created,
-			time,
-			is_pomodoro,
+			title: title ?? '',
+			description: description ?? '',
+			state: state ?? '',
+			category: category ?? '',
+			date_task: '' ?? '',
+			date_created: '' ?? '',
+			time: '' ?? '',
+			is_pomodoro: false,
+			pomodoro: pomodoro ?? [],
 		});
 
 		await user.save();
-		resp = { status: 200, message: 'Task update', user };
+		resp = { status: 200, message: 'Task update', task: user.tasks[user.tasks.length - 1] };
 		response.status(200).json(resp);
 	} catch (err: any) {
 		resp = { status: 404, name: err.name, message: 'Resource not found' };
