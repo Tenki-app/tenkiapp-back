@@ -6,7 +6,10 @@ const User = require('../models/user.model');
 const refreshTokenKey = process.env.REFRESH_TOKEN_SECRET;
 const accessTokenKey = process.env.ACCESS_TOKEN_SECRET;
 
-export const handleRefreshToken = async (request: Request, response: Response): Promise<Response> => {
+export const handleRefreshToken = async (
+	request: Request,
+	response: Response
+): Promise<Response> => {
 	let resp;
 	try {
 		const cookies = request.cookies;
@@ -28,7 +31,11 @@ export const handleRefreshToken = async (request: Request, response: Response): 
 				resp = { status: 403, message: 'Monda' };
 				return response.status(403).json(resp);
 			}
-			const accessToken = jwt.sign({ username: decoded.user_name, role: decoded.role }, accessTokenKey, { expiresIn: '60s' });
+			const accessToken = jwt.sign(
+				{ username: decoded.user_name, role: decoded.role },
+				accessTokenKey,
+				{ expiresIn: '60s' }
+			);
 			resp = { status: 201, accessToken: accessToken };
 			response.json(resp);
 		});

@@ -72,7 +72,7 @@ export const putTask = async (request: Request, response: Response) => {
 		response.status(200).json(resp);
 	} catch (err: any) {
 		resp = { status: 404, name: err.name, message: 'Resource not found' };
-		console.log(err);
+		console.error(err);
 		response.status(404).json(resp);
 	}
 };
