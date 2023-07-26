@@ -16,21 +16,31 @@ export const getUserName = async (user_name: string): Promise<IUserCreate> => {
 export const authLogin = async (request: any, response: Response): Promise<void> => {
 	let resp;
 	try {
-		const user = request.user;
-		const payload = {
-			username: user.user_name,
-			role: 'user',
-		};
-		const accessToken = jwt.sign(payload, accessTokenKey, { expiresIn: '60s' });
-		const refreshToken = jwt.sign(payload, refreshTokenKey, { expiresIn: '1d' });
+		if (request.user.code === 401) {
+			response.status(401).json({
+				...request.user,
+			});
+		} else {
+			const user = request.user;
+			const payload = {
+				username: user.user_name,
+				role: 'user',
+			};
+			const accessToken = jwt.sign(payload, accessTokenKey, { expiresIn: '15m' });
+			const refreshToken = jwt.sign(payload, refreshTokenKey, { expiresIn: '1d' });
 
-		response.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
-		user.refreshToken = refreshToken;
-		user.save();
-		response.json({
-			user,
-			accessToken,
-		});
+			response.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+			user.refreshToken = refreshToken;
+			user.save();
+
+			const userToSend = JSON.parse(JSON.stringify(user));
+			delete userToSend.tasks;
+
+			response.json({
+				user: userToSend,
+				accessToken,
+			});
+		}
 	} catch (err: any) {
 		resp = { status: 404, name: err.name, message: 'Resource not found' };
 		response.status(404).json(resp);
