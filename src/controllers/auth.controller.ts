@@ -27,7 +27,7 @@ export const authLogin = async (request: any, response: Response): Promise<void>
 				role: 'user',
 			};
 			const accessToken = jwt.sign(payload, accessTokenKey, { expiresIn: '15m' });
-			const refreshToken = jwt.sign(payload, refreshTokenKey, { expiresIn: '1d' });
+			const refreshToken = jwt.sign(payload, refreshTokenKey, { expiresIn: '1w' });
 
 			response.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
 			user.refreshToken = refreshToken;
@@ -47,6 +47,56 @@ export const authLogin = async (request: any, response: Response): Promise<void>
 	}
 };
 
+export const authGoogle = async (request: Request, response: Response): Promise<Response> => {
+	let resp;
+	try {
+		const user = request.body;
+		const existUser = await User.findOne({ user_name: user.email });
+
+		const payload = {
+			user: user.email,
+			role: 'user',
+		};
+
+		const accessToken = jwt.sign(payload, accessTokenKey, { expiresIn: '15m' });
+		const refreshToken = jwt.sign(payload, refreshTokenKey, { expiresIn: '1w' });
+
+		if (existUser) {
+			response.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+			existUser.refreshToken = refreshToken;
+			existUser.save();
+
+			const userToSend = JSON.parse(JSON.stringify(existUser));
+			delete userToSend.tasks;
+			console.log(userToSend);
+
+			return response.status(200).json({
+				user: userToSend,
+				accessToken,
+			});
+		}
+		const passwordHash = await bcrypt.hash(user.password, 10);
+		response.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+		const newUser = new User({
+			user_name: user.email,
+			password: passwordHash,
+			email: user.email,
+			name: '',
+			refreshToken: refreshToken,
+		});
+		await newUser.save();
+
+		return response.status(200).json({
+			user: newUser,
+			accessToken,
+		});
+	} catch (err: any) {
+		resp = { status: 404, name: err.name, message: 'Resource not found' };
+		console.log('err: ', err);
+		return response.status(404).json(resp);
+	}
+};
+
 export const authSignup = async (request: Request, response: Response): Promise<Response> => {
 	let resp;
 	try {
@@ -59,14 +109,14 @@ export const authSignup = async (request: Request, response: Response): Promise<
 			return response.status(409).json(resp);
 		}
 
-		const tokenPayload = {
+		const payload = {
 			username: user_name,
 			role: 'user',
 		};
 
 		const passwordHash = await bcrypt.hash(password, 10);
-		const accessToken = jwt.sign(tokenPayload, accessTokenKey, { expiresIn: '60s' });
-		const refreshToken = jwt.sign(tokenPayload, refreshTokenKey, { expiresIn: '1d' });
+		const accessToken = jwt.sign(payload, accessTokenKey, { expiresIn: '15m' });
+		const refreshToken = jwt.sign(payload, refreshTokenKey, { expiresIn: '1w' });
 
 		response.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
 
