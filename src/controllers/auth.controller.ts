@@ -13,8 +13,11 @@ export const getUserName = async (user_name: string): Promise<IUserCreate> => {
 	return user;
 };
 
-export const authLogin = async (request: any, response: Response): Promise<void> => {
-	let resp;
+export const authLogin = async (
+	request: any,
+	response: Response
+): Promise<void> => {
+	/* let resp;
 	try {
 		if (request.user.code === 401) {
 			response.status(401).json({
@@ -44,10 +47,13 @@ export const authLogin = async (request: any, response: Response): Promise<void>
 	} catch (err: any) {
 		resp = { status: 404, name: err.name, message: 'Resource not found' };
 		response.status(404).json(resp);
-	}
+	} */
 };
 
-export const authSignup = async (request: Request, response: Response): Promise<Response> => {
+export const authSignup = async (
+	request: Request,
+	response: Response
+): Promise<Response> => {
 	let resp;
 	try {
 		const { user_name, password, email, name } = request.body;
@@ -65,10 +71,17 @@ export const authSignup = async (request: Request, response: Response): Promise<
 		};
 
 		const passwordHash = await bcrypt.hash(password, 10);
-		const accessToken = jwt.sign(tokenPayload, accessTokenKey, { expiresIn: '60s' });
-		const refreshToken = jwt.sign(tokenPayload, refreshTokenKey, { expiresIn: '1d' });
+		const accessToken = jwt.sign(tokenPayload, accessTokenKey, {
+			expiresIn: '60s',
+		});
+		const refreshToken = jwt.sign(tokenPayload, refreshTokenKey, {
+			expiresIn: '1d',
+		});
 
-		response.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+		response.cookie('jwt', refreshToken, {
+			httpOnly: true,
+			maxAge: 24 * 60 * 60 * 1000,
+		});
 
 		const newUser = new User({
 			user_name: user_name,
@@ -89,19 +102,28 @@ export const authSignup = async (request: Request, response: Response): Promise<
 	}
 };
 
-export const handleLogout = async (request: Request, response: Response): Promise<Response> => {
+export const handleLogout = async (
+	request: Request,
+	response: Response
+): Promise<Response> => {
 	let resp;
 	try {
 		const cookies = request.cookies;
 		if (!cookies?.jwt) {
-			resp = { status: 204, message: 'There is not any resource coincidences' };
+			resp = {
+				status: 204,
+				message: 'There is not any resource coincidences',
+			};
 			return response.status(204).json(resp);
 		}
 
 		const refreshToken = cookies.jwt;
 		const foundUser = await User.findOne({ refreshToken: refreshToken });
 		if (!foundUser) {
-			response.clearCookie('jwt', { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+			response.clearCookie('jwt', {
+				httpOnly: true,
+				maxAge: 24 * 60 * 60 * 1000,
+			});
 			resp = { status: 403, message: 'Forbidden access' };
 			return response.status(403).json(resp);
 		}
@@ -109,7 +131,10 @@ export const handleLogout = async (request: Request, response: Response): Promis
 		foundUser.refreshToken = '';
 
 		// add in production: secure = true / this only allow https serves
-		response.clearCookie('jwt', { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+		response.clearCookie('jwt', {
+			httpOnly: true,
+			maxAge: 24 * 60 * 60 * 1000,
+		});
 		await foundUser.save();
 
 		resp = { status: 204, message: 'Logout successfully' };
