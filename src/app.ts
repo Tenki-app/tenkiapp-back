@@ -1,20 +1,28 @@
 require('dotenv').config();
 
 const { connectDatabase } = require('./database');
+const { auth } = require('express-oauth2-jwt-bearer');
 const routerApi = require('./routes/index.routes.ts');
 const express = require('express');
-const cookieParser = require('cookie-parser');
 const cors = require('cors');
+
 const app = express();
-const credentials = require('./middlewares/credentials');
+
+app.use(
+	cors({
+		origin: 'http://localhost:3000',
+	})
+);
+app.use(
+	auth({
+		issuerBaseURL: process.env.ISSUER_BASE_URL,
+		audience: process.env.AUDIENCE,
+	})
+);
 
 connectDatabase();
-app.use(credentials);
 
-app.use(cors({ origin: 'http://localhost:3000' }));
-require('./utils/auth');
 app.use(express.json());
-app.use(cookieParser());
 routerApi(app);
 
 export { app };
