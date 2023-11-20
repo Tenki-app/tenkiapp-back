@@ -108,7 +108,7 @@ export const postSignInUser = async (
 			return response.status(400).json(schemasError);
 		}
 
-		const userExist = await User.find({ email: userRequest.email });
+		const userExist = await User.findOne({ email: userRequest.email });
 
 		if (userExist) {
 			resp = {
