@@ -1,37 +1,22 @@
 const { model } = require('mongoose');
 const taskSchema = require('./task.model');
 let mongoose = require('mongoose');
-import { IUserCreate } from '../interfaces/user.interface';
 
-const userSchema = new mongoose.Schema(
-	{
-		name: {
-			type: String,
-			required: true,
-		},
-		user_name: {
-			type: String,
-			required: true,
-		},
-		email: {
-			type: String,
-			required: true,
-		},
-		refreshToken: {
-			type: String,
-			required: true,
-		},
-		tasks: [taskSchema],
+const userSchema = new mongoose.Schema({
+	name: {
+		type: String,
+		required: true,
 	},
-	{
-		toJSON: {
-			transform: (doc: IUserCreate, res: IUserCreate) => {
-				delete res.password;
-				delete res.refreshToken;
-			},
-		},
-	}
-);
+	user_name: {
+		type: String,
+		required: true,
+	},
+	email: {
+		type: String,
+		required: true,
+	},
+	tasks: [taskSchema],
+});
 
 module.exports = model('users', userSchema);
 
