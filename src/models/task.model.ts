@@ -21,6 +21,7 @@ const taskSchema = new Schema({
 	date_task: {
 		type: String,
 		required: false,
+		default: Date.now,
 	},
 	date_created: {
 		type: String,
