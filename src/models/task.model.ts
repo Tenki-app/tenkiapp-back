@@ -19,11 +19,12 @@ const taskSchema = new Schema({
 		required: true,
 	},
 	date_task: {
-		type: String,
+		type: Date,
 		required: false,
+		default: Date.now,
 	},
 	date_created: {
-		type: String,
+		type: Date,
 		required: false,
 	},
 	time: {
@@ -34,7 +35,10 @@ const taskSchema = new Schema({
 		type: Boolean,
 		default: false,
 	},
-	pomodoro: [pomodoroSchema],
+	pomodoro: {
+		type: [pomodoroSchema],
+		default: [],
+	},
 });
 
 module.exports = taskSchema;

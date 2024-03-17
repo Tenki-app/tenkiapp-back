@@ -1,7 +1,10 @@
 import { Request, Response } from 'express';
 const User = require('../models/user.model');
 
-export const getTask = async (request: Request, response: Response): Promise<void> => {
+export const getTask = async (
+	request: Request,
+	response: Response
+): Promise<void> => {
 	let resp = {};
 
 	try {
@@ -16,7 +19,10 @@ export const getTask = async (request: Request, response: Response): Promise<voi
 	}
 };
 
-export const getTasks = async (request: Request, response: Response): Promise<void> => {
+export const getTasks = async (
+	request: Request,
+	response: Response
+): Promise<void> => {
 	let resp = {};
 
 	try {
@@ -30,31 +36,60 @@ export const getTasks = async (request: Request, response: Response): Promise<vo
 	}
 };
 
-export const postTask = async (request: Request, response: Response): Promise<void> => {
+export const postTask = async (
+	request: Request,
+	response: Response
+): Promise<void> => {
 	let resp = {};
 
 	try {
 		const { userId } = request.params;
-		const { title, description, state, category, time, is_pomodoro, date_task, pomodoro } =
-			request.body;
+
+		const {
+			title,
+			description,
+			state,
+			category,
+			date_task,
+			pomodoro,
+			time,
+			is_pomodoro,
+		} = request.body;
 		const user = await User.findById(userId);
-		user.tasks.push({
-			title: title ?? '',
+
+		if (!title || !category) {
+			resp = {
+				status: 400,
+				message: 'Title and category are required',
+			};
+			response.status(400).json(resp);
+			return;
+		}
+
+		const taskToCreate = {
+			title: title,
 			description: description ?? '',
 			state: state ?? '',
-			category: category ?? '',
-			date_task: '' ?? '',
-			date_created: '' ?? '',
-			time: '' ?? '',
-			is_pomodoro: false,
+			category: category,
+			date_task: date_task,
+			date_created: '',
+			time: time ?? '',
 			pomodoro: pomodoro ?? [],
-		});
+			is_pomodoro: !!is_pomodoro,
+		};
+
+		user.tasks.push(taskToCreate);
 
 		await user.save();
-		resp = { status: 200, message: 'Task update', task: user.tasks[user.tasks.length - 1] };
+		resp = {
+			status: 200,
+			message: 'Task created successfully',
+			task: user.tasks[user.tasks.length - 1],
+		};
 		response.status(200).json(resp);
 	} catch (err: any) {
 		resp = { status: 404, name: err.name, message: 'Resource not found' };
+		console.error(err);
 		response.status(404).json(resp);
 	}
 };
@@ -68,7 +103,11 @@ export const putTask = async (request: Request, response: Response) => {
 		Object.assign(user.tasks.id(taskId), request.body);
 
 		await user.save();
-		resp = { status: 200, message: 'Task updated', task: user.tasks.id(taskId) };
+		resp = {
+			status: 200,
+			message: 'Task updated',
+			task: user.tasks.id(taskId),
+		};
 		response.status(200).json(resp);
 	} catch (err: any) {
 		resp = { status: 404, name: err.name, message: 'Resource not found' };
@@ -77,17 +116,28 @@ export const putTask = async (request: Request, response: Response) => {
 	}
 };
 
-export const deleteTask = async (request: Request, response: Response): Promise<void> => {
+export const deleteTask = async (
+	request: Request,
+	response: Response
+): Promise<void> => {
 	let resp = {};
 	try {
 		const { userId, taskId } = request.params;
 		const user = await User.findById(userId);
 		const task = user.tasks.pop(taskId);
 		await user.save();
-		resp = { status: 200, message: 'the user was deleted succesfully', task };
+		resp = {
+			status: 200,
+			message: 'the user was deleted succesfully',
+			task,
+		};
 		response.status(200).json(resp);
 	} catch (err: any) {
-		resp = { status: 404, name: err.name, message: 'Task or user not found' };
+		resp = {
+			status: 404,
+			name: err.name,
+			message: 'Task or user not found',
+		};
 		response.status(404).json(resp);
 	}
 };
