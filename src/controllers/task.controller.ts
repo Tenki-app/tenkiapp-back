@@ -75,6 +75,7 @@ export const postTask = async (
 			date_created: '',
 			time: time ?? '',
 			pomodoro: pomodoro ?? [],
+			is_pomodoro: !!is_pomodoro,
 		};
 
 		user.tasks.push(taskToCreate);
