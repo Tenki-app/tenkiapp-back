@@ -100,7 +100,9 @@ export const putTask = async (request: Request, response: Response) => {
 		const { userId, taskId } = request.params;
 
 		const user = await User.findById(userId);
-		Object.assign(user.tasks.id(taskId), request.body);
+		const taskToUpdate = user.tasks.id(taskId);
+
+		Object.assign(taskToUpdate, request.body);
 
 		await user.save();
 		resp = {
@@ -108,7 +110,7 @@ export const putTask = async (request: Request, response: Response) => {
 			message: 'Task updated',
 			task: user.tasks.id(taskId),
 		};
-		response.status(200).json(resp);
+		return response.status(200).json(resp);
 	} catch (err: any) {
 		resp = { status: 404, name: err.name, message: 'Resource not found' };
 		console.error(err);
