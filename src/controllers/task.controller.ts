@@ -97,9 +97,6 @@ export const postTask = async (
 export const putTask = async (request: Request, response: Response) => {
 	let resp = {};
 	try {
-		console.log(request.params);
-		console.log(request.body);
-
 		const { userId, taskId } = request.params;
 
 		const user = await User.findById(userId);
