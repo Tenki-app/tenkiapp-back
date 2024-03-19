@@ -7,7 +7,7 @@ const {
 } = require('../controllers/task.controller');
 const taskRouter = require('express').Router();
 
-taskRouter.route('/api/tasks/:userId').get(getTasks).post(postTask);
+taskRouter.route('/api/tasks/user/:userId').get(getTasks).post(postTask);
 taskRouter
 	.route('/api/tasks/:taskId/user/:userId')
 	.get(getTask)
