@@ -19,7 +19,36 @@ export const getTask = async (
 	}
 };
 
-export const getTasks = async (
+export const getAllTasksByCategory = async (
+	request: Request,
+	response: Response
+): Promise<any> => {
+	let resp = {};
+
+	try {
+		const { userId, category } = request.params;
+
+		if (!userId || !category) {
+			resp = { status: 400, message: 'userId and category are required' };
+			return response.status(400).json(resp);
+		}
+		const user = await User.findById(userId);
+		const allTasksByCategory = user.tasks.filter(
+			(singleTask: any) => singleTask.category === category
+		);
+		resp = {
+			status: 200,
+			message: `All tasks by ${category} category`,
+			tasks: allTasksByCategory,
+		};
+		return response.status(200).json(resp);
+	} catch (err: any) {
+		resp = { status: 404, name: err.name, message: 'Resource not found' };
+		response.status(404).json(resp);
+	}
+};
+
+export const getAllTasks = async (
 	request: Request,
 	response: Response
 ): Promise<void> => {
