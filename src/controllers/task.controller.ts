@@ -154,13 +154,25 @@ export const deleteTask = async (
 	let resp = {};
 	try {
 		const { userId, taskId } = request.params;
-		const user = await User.findById(userId);
-		const task = user.tasks.pop(taskId);
-		await user.save();
+
+		const user = await User.findByIdAndUpdate(
+			userId,
+			{ $pull: { tasks: { _id: taskId } } },
+			{ new: true }
+		);
+
+		if (!user) {
+			resp = {
+				status: 404,
+				message: 'User not found',
+			};
+			response.status(404).json(resp);
+			return;
+		}
+
 		resp = {
 			status: 200,
-			message: 'the user was deleted succesfully',
-			task,
+			message: 'the task deleted successfully',
 		};
 		response.status(200).json(resp);
 	} catch (err: any) {
