@@ -5,5 +5,8 @@
             "source": "/(.*)",
             "destination": "src/index.ts"
         }
+    ],
+    "builds": [
+        { "src": "src/index.ts", "use": "@vercel/node" }
     ]
 }
