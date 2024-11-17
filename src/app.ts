@@ -10,7 +10,7 @@ const app = express();
 
 app.use(
 	cors({
-		origin: 'http://localhost:3000',
+		origin: ['http://localhost:3000', 'https://tenkiapp-front-git-dev-tenkys-projects.vercel.app', 'https://tenkiapp-front.vercel.app'],
 	})
 );
 app.use(
