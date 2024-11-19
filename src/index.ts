@@ -1,9 +1,8 @@
+require('dotenv').config();
 const { app } = require('./app');
 const PORT = process.env.PORT;
-
-app.listen(PORT, () => {
-	// server started asynchronously
-	console.log(`Server running on http://localhost:${PORT}`);
+const PATH = process.env.CONNECTIONPATH;
+const server = app.listen(PORT, () => {
+    console.log(`Server running on ${PATH}${PORT}`);
 });
-
-export {};
+module.exports = server;
