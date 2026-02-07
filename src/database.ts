@@ -12,7 +12,7 @@ const connectDatabase = () => {
 		.connect(connectionString)
 		.then(() => console.log('Connected successfully to the cluster'))
 		.catch((err: Error) => {
-			console.error(Error);
+			console.error('Error connecting to the database:', err);
 		});
 };
 

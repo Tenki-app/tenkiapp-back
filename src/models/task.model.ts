@@ -40,6 +40,10 @@ const taskSchema = new Schema(
 			type: Boolean,
 			default: false,
 		},
+		date_done: {
+			type: Date,
+			required: false,
+		},
 		pomodoro: {
 			type: [pomodoroSchema],
 			default: [],

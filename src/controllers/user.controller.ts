@@ -133,6 +133,7 @@ export const postSignInUser = async (
 			return response.status(201).json(resp);
 		}
 	} catch (err: any) {
+		console.error("[postSignInUser] error:", err);
 		resp = { status: 404, name: err.name, message: 'User not found' };
 		return response.status(404).json(resp);
 	}
