@@ -6,5 +6,4 @@ function routerApi(app: any) {
 	app.use(taskRoutes);
 }
 
-module.exports = routerApi;
-export {};
+export = routerApi;

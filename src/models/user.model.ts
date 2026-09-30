@@ -29,6 +29,4 @@ const userSchema = new mongoose.Schema(
 	}
 );
 
-module.exports = model('users', userSchema);
-
-export {};
+export = model('users', userSchema);
