@@ -15,8 +15,8 @@ app.use(
 );
 app.use(
 	auth({
-		issuerBaseURL: process.env.ISSUER_BASE_URL,
-		audience: process.env.AUDIENCE,
+		issuerBaseURL: process.env.AUTH0_API_DOMAIN,
+		audience: process.env.AUTH0_API_AUDIENCE,
 	})
 );
 
